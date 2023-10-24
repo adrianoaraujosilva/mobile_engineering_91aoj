@@ -34,7 +34,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                 icon: addIcon,
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => addRoute));
+                          MaterialPageRoute(builder: (context) => addRoute))
+                      .then((_) => setState(() {}));
                 })
           ],
         ),

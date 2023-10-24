@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:persist_type/commons/input.dart';
+import 'package:persist_type/commons/helpers.dart';
 import 'package:persist_type/firebase/models/compra.dart';
+import 'package:persist_type/firebase/screens/form_produtos.dart';
 import 'package:intl/intl.dart';
 
 class FormCompraWidget extends StatelessWidget {
@@ -10,15 +11,13 @@ class FormCompraWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _mercadoController = TextEditingController();
   final _dataController = TextEditingController();
-  var _dataCompra = Timestamp.now();
+  final addRoute = FormProdutosWidget();
 
   _insertCompra(Compra compra) async {
-    await FirebaseFirestore.instance.collection("compras").add(compra.toJson());
-  }
-
-  Timestamp _dateTimeToTimestamp(DateTime dateTime) {
-    return Timestamp.fromMillisecondsSinceEpoch(
-        dateTime.millisecondsSinceEpoch);
+    DocumentReference docRef = await FirebaseFirestore.instance
+        .collection("compras")
+        .add(compra.toJson());
+    return docRef.id;
   }
 
   @override
@@ -36,28 +35,45 @@ class FormCompraWidget extends StatelessWidget {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  InputWidget(
-                      label: "Mercado", inputController: _mercadoController),
-                  TextField(
-                    controller: _dataController,
+                  TextFormField(
+                    decoration: const InputDecoration(
+                        icon: Icon(Icons.text_fields),
+                        labelText: "Mercado",
+                        hintText: "Nome do mercado"),
+                    controller: _mercadoController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Mercado inválido";
+                      }
+
+                      return null;
+                    },
+                  ),
+                  TextFormField(
                     decoration: const InputDecoration(
                         icon: Icon(Icons.calendar_today),
-                        labelText: "Informe a data"),
+                        labelText: "Data",
+                        hintText: "Data da compra"),
+                    controller: _dataController,
                     readOnly: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Data inválida";
+                      }
+
+                      return null;
+                    },
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
+                          // locale: const Locale('pt-BR'),
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2101));
-
                       if (pickedDate != null) {
                         String formattedDate =
                             DateFormat('yyyy-MM-dd').format(pickedDate);
                         _dataController.text = formattedDate;
-                        _dataCompra = Timestamp.fromDate(pickedDate);
-                      } else {
-                        print("Date is not selected");
                       }
                     },
                   ),
@@ -68,10 +84,14 @@ class FormCompraWidget extends StatelessWidget {
                       onPressed: () {
                         if (_formKey.currentState != null &&
                             _formKey.currentState!.validate()) {
-                          final compra =
-                              Compra(_mercadoController.text, _dataCompra);
+                          final compra = Compra(_mercadoController.text,
+                              convertStringToTimestamp(_dataController.text));
                           _insertCompra(compra);
-                          Navigator.pop(context);
+                          // Navigator.pop(context, compra_id);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => addRoute));
                         }
                       },
                     ),

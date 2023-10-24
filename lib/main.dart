@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:persist_type/floor/screens/list_books.dart';
-import 'package:persist_type/firebase/screens/list_cars.dart';
+// import 'package:persist_type/floor/screens/list_books.dart';
+// import 'package:persist_type/firebase/screens/list_cars.dart';
 import 'package:persist_type/home.dart';
 
 void main() async {
@@ -24,9 +24,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: {
-        "/": (context) => HomeWidget(),
-        "/books": (context) => const ListBooksWidget(),
-        "/cars": (context) => const ListCarsWidget(),
+        "/": (context) => const HomeWidget(),
+        // "/books": (context) => const ListBooksWidget(),
+        // "/cars": (context) => const ListCarsWidget(),
       },
       initialRoute: "/",
     );
