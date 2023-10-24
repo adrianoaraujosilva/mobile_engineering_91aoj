@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1120683445",
+    "project_id": "aojfirebase-adriano",
+    "storage_bucket": "aojfirebase-adriano.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1120683445:android:b86abfe25542201f33c5fc",
+        "android_client_info": {
+          "package_name": "com.example.persist_type"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvCj48-JQ_1Dea-zvoCYn59Q1HfRl02Y0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
