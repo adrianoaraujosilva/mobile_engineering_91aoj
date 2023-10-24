@@ -10,15 +10,9 @@ class FormCompraWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _mercadoController = TextEditingController();
   final _dataController = TextEditingController();
-  var _dataCompra = Timestamp.now();
 
   _insertCompra(Compra compra) async {
     await FirebaseFirestore.instance.collection("compras").add(compra.toJson());
-  }
-
-  Timestamp _dateTimeToTimestamp(DateTime dateTime) {
-    return Timestamp.fromMillisecondsSinceEpoch(
-        dateTime.millisecondsSinceEpoch);
   }
 
   @override
@@ -39,28 +33,36 @@ class FormCompraWidget extends StatelessWidget {
                   InputWidget(
                       label: "Mercado", inputController: _mercadoController),
                   TextField(
-                    controller: _dataController,
+                    controller:
+                        _dataController, //editing controller of this TextField
                     decoration: const InputDecoration(
-                        icon: Icon(Icons.calendar_today),
-                        labelText: "Informe a data"),
-                    readOnly: true,
+                        icon: Icon(Icons.calendar_today), //icon of text field
+                        labelText: "Enter Date" //label text of field
+                        ),
+                    readOnly:
+                        true, //set it true, so that user will not able to edit text
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
+                          firstDate: DateTime(
+                              2000), //DateTime.now() - not to allow to choose before today.
                           lastDate: DateTime(2101));
 
                       if (pickedDate != null) {
+                        print(pickedDate);
                         String formattedDate =
                             DateFormat('yyyy-MM-dd').format(pickedDate);
+                        print(formattedDate);
                         _dataController.text = formattedDate;
-                        _dataCompra = Timestamp.fromDate(pickedDate);
+                        _dataController.text = formattedDate;
                       } else {
                         print("Date is not selected");
                       }
                     },
                   ),
+                  // InputWidget(
+                  //     label: "Modelo", inputController: _dataController),
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: ElevatedButton(
@@ -68,8 +70,10 @@ class FormCompraWidget extends StatelessWidget {
                       onPressed: () {
                         if (_formKey.currentState != null &&
                             _formKey.currentState!.validate()) {
-                          final compra =
-                              Compra(_mercadoController.text, _dataCompra);
+                          final compra = Compra(
+                              // _mercadoController.text, _dataController.text);
+                              _mercadoController.text,
+                              _dataController.text);
                           _insertCompra(compra);
                           Navigator.pop(context);
                         }
