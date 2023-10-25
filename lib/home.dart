@@ -8,9 +8,7 @@ import 'package:persist_type/firebase/models/compra.dart';
 import 'package:persist_type/firebase/screens/form_compra.dart';
 
 class HomeWidget extends StatefulWidget {
-  const HomeWidget({super.key, required this.username});
-
-  final String username;
+  const HomeWidget({super.key});
 
   @override
   State<HomeWidget> createState() => _HomeWidgetState();
