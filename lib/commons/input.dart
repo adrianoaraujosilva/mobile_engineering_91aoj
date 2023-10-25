@@ -17,7 +17,7 @@ class InputWidget extends StatelessWidget {
       controller: inputController,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "{$label} inválido";
+          return "O campo {$label} é obrigatório";
         }
 
         return null;

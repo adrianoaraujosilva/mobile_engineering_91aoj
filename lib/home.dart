@@ -14,7 +14,7 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
-  List<Compra> compras = [];
+  // List<Compra> compras = [];
 
   @override
   void initState() {
