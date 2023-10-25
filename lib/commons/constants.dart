@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-const sizedBox = SizedBox(height: 10);
+const sizedBoxH10 = SizedBox(height: 10);
 const loginPage = Text('Login Page');
 const btnLogar = Text('Entrar');
 const edgeInsets = EdgeInsets.all(10.0);
+const edgeInsets16 = EdgeInsets.all(16.0);
 const outlineInputBorder = OutlineInputBorder();
 
 const addIcon = Icon(Icons.add);

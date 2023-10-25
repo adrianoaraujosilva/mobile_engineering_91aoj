@@ -7,7 +7,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart';
 
 String formatTimestamp(Timestamp timestamp) {
-  final f = DateFormat('dd-MM-yyyy');
+  final f = DateFormat('dd/MM/yyyy');
 
   return f.format(timestamp.toDate());
 }
