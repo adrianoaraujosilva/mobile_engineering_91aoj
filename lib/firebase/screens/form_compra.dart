@@ -11,12 +11,12 @@ class FormCompraWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _mercadoController = TextEditingController();
   final _dataController = TextEditingController();
-  final addRoute = FormProdutosWidget();
 
   _insertCompra(Compra compra) async {
     DocumentReference docRef = await FirebaseFirestore.instance
         .collection("compras")
         .add(compra.toJson());
+
     return docRef.id;
   }
 
@@ -81,17 +81,21 @@ class FormCompraWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8),
                     child: ElevatedButton(
                       child: const Text("Salvar"),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState != null &&
                             _formKey.currentState!.validate()) {
+                          final navigator = Navigator.of(context);
                           final compra = Compra(_mercadoController.text,
                               convertStringToTimestamp(_dataController.text));
-                          _insertCompra(compra);
-                          // Navigator.pop(context, compra_id);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => addRoute));
+                          final compraId = await _insertCompra(compra);
+
+                          if (compraId != null) {
+                            navigator.push(MaterialPageRoute(
+                                builder: (context) => FormProdutosWidget(
+                                      compraId: compraId,
+                                      mercadoNome: _mercadoController.text,
+                                    )));
+                          }
                         }
                       },
                     ),

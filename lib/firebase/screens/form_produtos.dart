@@ -1,9 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:persist_type/commons/constants.dart';
+import 'package:persist_type/components/table_produtos_component.dart';
 import 'package:persist_type/firebase/models/produto.dart';
 
 class FormProdutosWidget extends StatefulWidget {
-  const FormProdutosWidget({super.key});
+  FormProdutosWidget(
+      {Key? key, required this.compraId, required this.mercadoNome})
+      : super(key: key);
+
+  final String compraId;
+  final String mercadoNome;
 
   @override
   State<FormProdutosWidget> createState() => _FormProdutosWidgetState();
@@ -14,88 +22,45 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
   TextEditingController quantidadeController = TextEditingController();
   TextEditingController precoController = TextEditingController();
 
-  final form = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   static final _focusNode = FocusNode();
-  bool update = false;
+  List<Produto> produtoList = [];
   int currentIndex = 0;
+  bool visibleAdd = true;
+  bool visibleEdit = false;
 
-  List<Produto> produtoList = [
-    Produto("1", "Detergente abxasdsadasd", 5, 2.58),
-    Produto("1", "Amaciante", 2, 10.68),
-    Produto("1", "Trakinas", 5, 1.72),
-    Produto("1", "Detergente abxasdsadasd", 5, 2.58),
-    Produto("1", "Amaciante", 2, 10.68),
-    Produto("1", "Trakinas", 5, 1.72),
-    Produto("1", "Detergente abxasdsadasd", 5, 2.58),
-    Produto("1", "Amaciante", 2, 10.68),
-    Produto("1", "Trakinas", 5, 1.72),
-    Produto("1", "Detergente abxasdsadasd", 5, 2.58),
-    Produto("1", "Amaciante", 2, 10.68),
-    Produto("1", "Trakinas", 5, 1.72),
-  ];
+  _insertProduto(Produto produto) async => await FirebaseFirestore.instance
+      .collection("produtos")
+      .add(produto.toJson());
+
+  _updateProduto(Produto produto) async => await FirebaseFirestore.instance
+      .collection("produtos")
+      .doc(produto.id)
+      .update(produto.toJson());
+
+  _deleteProduto(String? id) async =>
+      await FirebaseFirestore.instance.collection("produtos").doc(id).delete();
+
+  _setCurrentIndex(int index) => currentIndex = index;
+  _setProdutoList(Produto produto) => produtoList.add(produto);
+  _clearProdutoList() => produtoList.clear();
+  _editMode(bool visible) {
+    setState(() {
+      visibleAdd = !visible;
+      visibleEdit = visible;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget bodyData() => DataTable(
-          columnSpacing: 30.0,
-          onSelectAll: (b) {},
-          sortColumnIndex: 0,
-          sortAscending: true,
-          columns: const <DataColumn>[
-            DataColumn(label: Text("Nome")),
-            DataColumn(label: Text("Qtd.")),
-            DataColumn(label: Text("Preco")),
-            DataColumn(label: Text("")),
-            DataColumn(label: Text("")),
-          ],
-          rows: produtoList
-              .map(
-                (produto) => DataRow(
-                  cells: [
-                    DataCell(
-                      Text(produto.nome),
-                    ),
-                    DataCell(
-                      Text(produto.quantidade.toString()),
-                    ),
-                    DataCell(
-                      Text(produto.preco.toString()),
-                    ),
-                    DataCell(
-                      const SizedBox(
-                        width: 10,
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.black,
-                        ),
-                      ),
-                      onTap: () {
-                        currentIndex = produtoList.indexOf(produto);
-                        _updateTextControllers(produto); //
-                      },
-                    ),
-                    DataCell(
-                      const SizedBox(
-                        width: 10,
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                      ),
-                      onTap: () {
-                        currentIndex = produtoList.indexOf(produto);
-                        _deleteTextControllers(); // new function here
-                      },
-                    ),
-                  ],
-                ),
-              )
-              .toList(),
-        );
+    final pageTitle = Text("${widget.mercadoNome} - Lista de produtos");
+    const textCancel = Text("Cancelar");
+    const textAdd = Text("Adicionar");
+    const textEdit = Text("Atualizar");
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Data add to List Table using Form"),
+        title: pageTitle,
         leading: BackButton(
           color: Colors.black,
           onPressed: () {
@@ -110,7 +75,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Form(
-                key: form,
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
                     TextFormField(
@@ -121,7 +86,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'This field is required';
+                          return 'O campo nome é obrigatório';
                         }
                         return null;
                       },
@@ -132,9 +97,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                             decorationStyle: TextDecorationStyle.solid),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    sizedBox,
                     TextFormField(
                       controller: quantidadeController,
                       keyboardType: TextInputType.number,
@@ -146,7 +109,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'This field is required';
+                          return 'O campo quantidade é obrigatório';
                         }
                         return null;
                       },
@@ -157,9 +120,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                             decorationStyle: TextDecorationStyle.solid),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    sizedBox,
                     TextFormField(
                       controller: precoController,
                       keyboardType:
@@ -172,7 +133,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'This field is required';
+                          return 'O campo preço é obrigatório';
                         }
                         return null;
                       },
@@ -183,40 +144,45 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                             decorationStyle: TextDecorationStyle.solid),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    sizedBox,
                     Column(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Center(
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              TextButton(
-                                child: const Text("Add"),
-                                onPressed: () {
-                                  print(validate());
-                                  if (validate() == true) {
-                                    form.currentState?.save();
-                                    addProdutoToList(
-                                        nomeController.text,
-                                        quantidadeController.text,
-                                        precoController.text);
-                                    clearForm();
-                                  }
-                                },
+                              Visibility(
+                                visible: visibleAdd,
+                                child: TextButton(
+                                  child: textAdd,
+                                  onPressed: () {
+                                    if (_formKey.currentState != null &&
+                                        _formKey.currentState!.validate()) {
+                                      addProdutoToList(
+                                          nomeController.text,
+                                          quantidadeController.text,
+                                          precoController.text);
+                                      clearForm();
+                                    }
+                                  },
+                                ),
+                              ),
+                              Visibility(
+                                visible: visibleEdit,
+                                child: TextButton(
+                                  child: textEdit,
+                                  onPressed: () {
+                                    if (_formKey.currentState != null &&
+                                        _formKey.currentState!.validate()) {
+                                      updateForm();
+                                      clearForm();
+                                    }
+                                  },
+                                ),
                               ),
                               TextButton(
-                                child: const Text("Update"),
-                                onPressed: () {
-                                  if (validate() == true) {
-                                    form.currentState?.save();
-                                    updateForm();
-                                    clearForm();
-                                  }
-                                },
-                              ),
+                                  child: textCancel,
+                                  onPressed: () => clearForm()),
                             ],
                           ),
                         ),
@@ -226,26 +192,21 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                 ),
               ),
             ),
-            bodyData(),
+            TableProdutosWidget(
+              editMode: _editMode,
+              setCurrentIndex: _setCurrentIndex,
+              setProdutoList: _setProdutoList,
+              clearProdutoList: _clearProdutoList,
+              updateTextControllers: _updateTextControllers,
+              deleteProduto: _deleteProduto,
+            ),
           ],
         ),
       ),
     );
   }
 
-  void updateForm() {
-    setState(() {
-      //Code to update the list after editing
-      Produto produto = Produto(
-          "123",
-          nomeController.text,
-          int.parse(quantidadeController.text),
-          double.parse(precoController.text));
-      produtoList[currentIndex] = produto;
-    });
-  }
-
-  void _updateTextControllers(Produto produto) {
+  _updateTextControllers(Produto produto) {
     setState(() {
       nomeController.text = produto.nome;
       quantidadeController.text = produto.quantidade.toString();
@@ -253,28 +214,23 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
     });
   }
 
-  void _deleteTextControllers() {
-    setState(() {
-      produtoList.removeAt(currentIndex);
-    });
-  }
+  void updateForm() => _updateProduto(Produto(
+      produtoList[currentIndex].id,
+      widget.compraId,
+      nomeController.text,
+      int.parse(quantidadeController.text),
+      double.parse(precoController.text)));
 
   void addProdutoToList(nome, quantidade, preco) {
-    setState(() {
-      produtoList.add(
-          Produto("123", nome, int.parse(quantidade), double.parse(preco)));
-    });
+    final produto = Produto(null, widget.compraId, nome, int.parse(quantidade),
+        double.parse(preco));
+    _insertProduto(produto);
   }
 
-  clearForm() {
+  void clearForm() {
+    _editMode(false);
     nomeController.clear();
     quantidadeController.clear();
     precoController.clear();
-  }
-
-  bool validate() {
-    var valid = form.currentState!.validate();
-    if (valid == true) form.currentState?.save();
-    return valid;
   }
 }
