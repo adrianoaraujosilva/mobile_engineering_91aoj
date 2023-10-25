@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'commons/constants.dart';
+import 'home.dart';
 
 class LoginPageWidget extends StatefulWidget {
   const LoginPageWidget({super.key, required String title});
@@ -11,7 +12,7 @@ class LoginPageWidget extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPageWidget> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginPageWidget> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
-                  controller: emailController,
+                  controller: userNameController,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: 'Usuário: '),
                   validator: (value) {
@@ -58,25 +59,45 @@ class _LoginPageState extends State<LoginPageWidget> {
                   },
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        //Navigate the user to the home page
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  "Por favor, preencha corretamente as credenciais")),
-                        );
-                      }
-                    },
-                    child: btnLogar,
-                  ),
-                ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 16.0),
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            if ((userNameController.text == "adriano.araujo" ||
+                                    userNameController.text ==
+                                        "marcely.santello") &&
+                                passwordController.text == "1234") {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeWidget(
+                                          username: userNameController.text,
+                                        )),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Credenciais inválidas')),
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      "Por favor, preencha corretamente as credenciais")),
+                            );
+                          }
+                        },
+                        child: btnLogar,
+                      ),
+                    ),
+                  )
+                ],
               )
             ],
           ),
