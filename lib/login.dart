@@ -12,8 +12,8 @@ class LoginPageWidget extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPageWidget> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  var userNameController = TextEditingController();
+  var passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +33,14 @@ class _LoginPageState extends State<LoginPageWidget> {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
                   controller: userNameController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Usuário: '),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: 'Usuário: ',
+                    suffixIcon: IconButton(
+                      onPressed: userNameController.clear,
+                      icon: const Icon(Icons.clear),
+                    ),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Por favor, informe o seu usuário";
@@ -49,8 +55,14 @@ class _LoginPageState extends State<LoginPageWidget> {
                 child: TextFormField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Senha: '),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: 'Senha: ',
+                    suffixIcon: IconButton(
+                      onPressed: passwordController.clear,
+                      icon: const Icon(Icons.clear),
+                    ),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Por favor, informe a sua senha";
@@ -59,45 +71,41 @@ class _LoginPageState extends State<LoginPageWidget> {
                   },
                 ),
               ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 16.0),
-                    child: Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            if ((userNameController.text == "adriano.araujo" ||
-                                    userNameController.text ==
-                                        "marcely.santello") &&
-                                passwordController.text == "1234") {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeWidget(
-                                          username: userNameController.text,
-                                        )),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Credenciais inválidas')),
-                              );
-                            }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      "Por favor, preencha corretamente as credenciais")),
-                            );
-                          }
-                        },
-                        child: btnLogar,
-                      ),
-                    ),
-                  )
-                ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        if ((userNameController.text == "adriano.araujo" ||
+                                userNameController.text ==
+                                    "marcely.santello") &&
+                            passwordController.text == "1234") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeWidget(
+                                      username: userNameController.text,
+                                    )),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Credenciais inválidas')),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(
+                                  "Por favor, preencha corretamente as credenciais")),
+                        );
+                      }
+                    },
+                    child: btnLogar,
+                  ),
+                ),
               )
             ],
           ),
