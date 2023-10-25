@@ -67,7 +67,7 @@ class FormCompraWidget extends StatelessWidget {
                         _formKey.currentState!.validate()) {
                       final navigator = Navigator.of(context);
                       final compra = Compra(_mercadoController.text,
-                          convertStringToTimestamp(_dataController.text), "");
+                          convertStringToTimestamp(_dataController.text));
                       final compraId = await _insertCompra(compra);
 
                       if (compraId != null) {
@@ -76,6 +76,7 @@ class FormCompraWidget extends StatelessWidget {
                             builder: (context) => FormProdutosWidget(
                               compraId: compraId,
                               mercadoNome: _mercadoController.text,
+                              backPage: 2,
                             ),
                           ),
                         );
