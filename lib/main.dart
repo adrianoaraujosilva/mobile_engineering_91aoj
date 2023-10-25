@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:persist_type/home.dart';
+import 'package:persist_type/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: {
-        "/": (context) => const HomeWidget(),
+        "/": (context) => const LoginPageWidget(title: 'Login Page'),
       },
       initialRoute: "/",
     );
