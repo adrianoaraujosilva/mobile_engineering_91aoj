@@ -68,7 +68,9 @@ class _LoginPageState extends State<LoginPageWidget> {
                         //Navigate the user to the home page
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: textPreenchaInformacoes),
+                          const SnackBar(
+                              content: Text(
+                                  "Por favor, preencha corretamente as credenciais")),
                         );
                       }
                     },
