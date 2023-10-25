@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persist_type/commons/helpers.dart';
 
 import 'commons/constants.dart';
 import 'home.dart';
@@ -78,11 +79,11 @@ class _LoginPageState extends State<LoginPageWidget> {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
                 child: Center(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        if ((userNameController.text == "adriano.araujo" ||
-                                userNameController.text ==
-                                    "marcely.santello") &&
+                        if ((userNameController.text == "marcely.santello" ||
+                                userNameController.text == "adriano.araujo" ||
+                                userNameController.text == "prof") &&
                             passwordController.text == "1234") {
                           Navigator.push(
                             context,
