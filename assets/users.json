@@ -1,0 +1,8 @@
+{
+    "validUsers": [
+
+        {"username": "adriano.araujo",      "senha": "1234"},
+        {"username": "marcely.santello",    "senha": "1234"},
+        {"username": "prof",                "senha": "1234"}
+    ]
+}
