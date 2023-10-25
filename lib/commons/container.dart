@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persist_type/commons/constants.dart';
+import 'package:persist_type/firebase/screens/form_produtos.dart';
 
 class ContainerHomeWidget extends StatelessWidget {
   const ContainerHomeWidget({
@@ -7,6 +8,7 @@ class ContainerHomeWidget extends StatelessWidget {
     this.height,
     this.width,
     this.child,
+    required this.compraId,
     required this.compraNome,
     this.compraData,
     required this.totalProdutos,
@@ -16,6 +18,7 @@ class ContainerHomeWidget extends StatelessWidget {
   final double? height;
   final double? width;
   final Widget? child;
+  final String compraId;
   final String compraNome;
   final String? compraData;
   final int totalProdutos;
@@ -43,25 +46,37 @@ class ContainerHomeWidget extends StatelessWidget {
     );
     String preco = totalPreco.toStringAsFixed(2);
 
-    return Container(
-      height: 200,
-      width: MediaQuery.of(context).size.width / 2 - 32,
-      margin: edgeInsets16,
-      padding: edgeInsets16,
-      decoration: BoxDecoration(
-        color: Colors.yellow[100],
-        borderRadius: borderRadius,
-        boxShadow: boxShadow,
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FormProdutosWidget(
+            compraId: compraId,
+            mercadoNome: compraNome,
+            backPage: 1,
+          ),
+        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Mercado: $compraNome", style: textStyleTitle),
-          Text("Data: $compraData", style: textStyleSubTitle),
-          Text("$totalProdutos Produtos", style: textStyleSubTitle),
-          Text("Total: R\$ $preco", style: textStyleSubTitle),
-        ],
+      child: Container(
+        height: 200,
+        width: MediaQuery.of(context).size.width / 2 - 32,
+        margin: edgeInsets16,
+        padding: edgeInsets16,
+        decoration: BoxDecoration(
+          color: Colors.yellow[100],
+          borderRadius: borderRadius,
+          boxShadow: boxShadow,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Mercado: $compraNome", style: textStyleTitle),
+            Text("Data: $compraData", style: textStyleSubTitle),
+            Text("$totalProdutos Produtos", style: textStyleSubTitle),
+            Text("Total: R\$ $preco", style: textStyleSubTitle),
+          ],
+        ),
       ),
     );
   }

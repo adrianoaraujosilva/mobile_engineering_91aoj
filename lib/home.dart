@@ -90,41 +90,17 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget _buildItem(BuildContext context, QueryDocumentSnapshot data) {
     Compra compra = Compra.fromSnapshot(data);
 
-    // double totalNumber = 0;
-    // _getProdutos(totalNumber);
-
-    // print("_buildItem: $totalNumber");
+    // TODO: Consultar produtos por compra para
+    // gerar os totalizadores nos cards
+    // _getCompraProdutos()
 
     return ContainerHomeWidget(
+      compraId: data.id,
       compraNome: compra.mercado,
       compraData: formatTimestamp(compra.data),
-      totalProdutos: 10,
-      totalPreco: 150.00,
+      totalProdutos: 10, // MOCK totalizador da quantidade de produtos na compra
+      totalPreco:
+          150.00, // MOCK sumarizador de preço de todos os produtos na compra
     );
   }
-
-  // _getProdutos(double totalNumber) async {
-  //   var produtos = await FirebaseFirestore.instance
-  //       .collection('produtos')
-  //       // .where('date', isGreaterThan: DateTime.now())
-  //       // .where('date', isGreaterThan: DateTime.parse(widget.searchTrip.date))
-  //       .get()
-  //       .then((QuerySnapshot querySnapshot) {
-  //     int numTransactions = querySnapshot.docs.length;
-  //     print('Total transactions for today: $numTransactions');
-
-  //     int totalTxnAmt = querySnapshot.docs
-  //         .fold(0, (acc, doc) => acc + (doc['txnAmount'] ?? 0))
-  //         .toInt();
-
-  //     print('Total txnAmt for today: $totalTxnAmt');
-  //   });
-  //   //     .then((snapshot) {
-  //   //   double totalNumber = 0;
-  //   //   List<QueryDocumentSnapshot> _allTrips = snapshot.docs;
-  //   //   _allTrips.forEach((element) => print(element.data()["preco"]));
-
-  //   //   // _allTrips.forEach((element) => totalNumber += element.data()['seats']);
-  //   // });
-  // }
 }

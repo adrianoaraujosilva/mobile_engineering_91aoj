@@ -7,12 +7,16 @@ import 'package:persist_type/components/table_produtos_component.dart';
 import 'package:persist_type/firebase/models/produto.dart';
 
 class FormProdutosWidget extends StatefulWidget {
-  FormProdutosWidget(
-      {Key? key, required this.compraId, required this.mercadoNome})
-      : super(key: key);
+  FormProdutosWidget({
+    Key? key,
+    required this.compraId,
+    required this.mercadoNome,
+    required this.backPage,
+  }) : super(key: key);
 
   final String compraId;
   final String mercadoNome;
+  final int backPage;
 
   @override
   State<FormProdutosWidget> createState() => _FormProdutosWidgetState();
@@ -66,7 +70,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
           color: Colors.black,
           onPressed: () {
             int count = 0;
-            Navigator.of(context).popUntil((_) => count++ >= 2);
+            Navigator.of(context).popUntil((_) => count++ >= widget.backPage);
           },
         ),
       ),
