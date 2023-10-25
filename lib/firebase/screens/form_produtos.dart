@@ -85,7 +85,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                       autoFocus: true,
                       focusNode: _focusNode,
                     ),
-                    sizedBox,
+                    sizedBoxH10,
                     InputWidget(
                       label: "Quantidade",
                       inputController: quantidadeController,
@@ -96,7 +96,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                       ],
                       icon: iconNumber,
                     ),
-                    sizedBox,
+                    sizedBoxH10,
                     InputWidget(
                       label: "Preço",
                       inputController: precoController,
@@ -107,7 +107,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
                       ],
                       icon: iconCurrency,
                     ),
-                    sizedBox,
+                    sizedBoxH10,
                     Column(
                       children: <Widget>[
                         Center(
