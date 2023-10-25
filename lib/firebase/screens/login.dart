@@ -1,8 +1,8 @@
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:persist_type/commons/helpers.dart';
 
-import 'commons/constants.dart';
-import 'home.dart';
+import '../../commons/constants.dart';
+import '../../home.dart';
 
 class LoginPageWidget extends StatefulWidget {
   const LoginPageWidget({super.key});
@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPageWidget> {
   @override
   Widget build(BuildContext context) {
     const loginPage = Text('Login');
+    const homePage = HomeWidget();
 
     return Scaffold(
       appBar: AppBar(
@@ -79,18 +80,18 @@ class _LoginPageState extends State<LoginPageWidget> {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
                 child: Center(
                   child: ElevatedButton(
+                    // TODO: problema com sistema de segurança no Firebase
+                    //onPressed: signIn,
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        // Usuários MOCK para testes
                         if ((userNameController.text == "marcely.santello" ||
                                 userNameController.text == "adriano.araujo" ||
                                 userNameController.text == "prof") &&
                             passwordController.text == "1234") {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeWidget(
-                                      username: userNameController.text,
-                                    )),
+                            MaterialPageRoute(builder: (context) => homePage),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -116,4 +117,15 @@ class _LoginPageState extends State<LoginPageWidget> {
       ),
     );
   }
+
+  // TODO: problema com sistema de segurança no Firebase
+  // Future signIn() async {
+  //   try {
+  //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //         email: userNameController.text.trim(),
+  //         password: passwordController.text.trim());
+  //   } on FirebaseAuthException catch (error) {
+  //     return error.toString();
+  //   }
+  // }
 }
