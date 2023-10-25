@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persist_type/commons/constants.dart';
+import 'package:persist_type/commons/input.dart';
 import 'package:persist_type/components/table_produtos_component.dart';
 import 'package:persist_type/firebase/models/produto.dart';
 
@@ -73,76 +74,38 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: edgeInsets,
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    TextFormField(
-                      controller: nomeController,
+                    InputWidget(
+                      label: "Nome",
+                      inputController: nomeController,
+                      autoFocus: true,
                       focusNode: _focusNode,
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      maxLines: 1,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'O campo nome é obrigatório';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Nome',
-                        hintText: 'Nome do produto',
-                        labelStyle: TextStyle(
-                            decorationStyle: TextDecorationStyle.solid),
-                      ),
                     ),
                     sizedBox,
-                    TextFormField(
-                      controller: quantidadeController,
-                      keyboardType: TextInputType.number,
+                    InputWidget(
+                      label: "Quantidade",
+                      inputController: quantidadeController,
+                      textInputType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         FilteringTextInputFormatter.digitsOnly
                       ],
-                      autocorrect: false,
-                      maxLines: 1,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'O campo quantidade é obrigatório';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Quantidade',
-                        hintText: 'Quantidade',
-                        labelStyle: TextStyle(
-                            decorationStyle: TextDecorationStyle.solid),
-                      ),
+                      icon: iconNumber,
                     ),
                     sizedBox,
-                    TextFormField(
-                      controller: precoController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                    InputWidget(
+                      label: "Preço",
+                      inputController: precoController,
+                      textInputType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.allow(
                             RegExp(r'^(\d+)?\.?\d{0,2}'))
                       ],
-                      autocorrect: false,
-                      maxLines: 1,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'O campo preço é obrigatório';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Preço',
-                        hintText: 'Preço',
-                        labelStyle: TextStyle(
-                            decorationStyle: TextDecorationStyle.solid),
-                      ),
+                      icon: iconCurrency,
                     ),
                     sizedBox,
                     Column(
@@ -193,6 +156,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
               ),
             ),
             TableProdutosWidget(
+              compraId: widget.compraId,
               editMode: _editMode,
               setCurrentIndex: _setCurrentIndex,
               setProdutoList: _setProdutoList,
@@ -229,6 +193,7 @@ class _FormProdutosWidgetState extends State<FormProdutosWidget> {
 
   void clearForm() {
     _editMode(false);
+    _focusNode.requestFocus();
     nomeController.clear();
     quantidadeController.clear();
     precoController.clear();
